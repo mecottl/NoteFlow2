@@ -19,12 +19,11 @@
   }
 
   async function loadNote(){
-    if (!id) { // nueva
+    if (!id) { 
       pageTitleEl.textContent = 'Nueva Nota';
       deleteBtn.style.display = 'none';
       return;
     }
-    pageTitleEl.textContent = `Editando Nota #${id}`;
     setStatus('Cargando nota...');
     try {
       const res = await fetch(`${API_BASE}/notes/${id}`, {
@@ -48,7 +47,7 @@
     const text  = (editor.value || '').trim();
 
     if (!title || !text){
-      return setStatus('title y text son requeridos.', 'text-yellow-400');
+      return setStatus('No se puede guardar una nota vacía.', 'text-yellow-400');
     }
 
     saveBtn.disabled = true;

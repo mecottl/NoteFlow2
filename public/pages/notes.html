@@ -18,8 +18,9 @@
   <header class="p-6 border-b-2 border-purple-800 shadow-lg shadow-purple-900/30">
     <nav class="container mx-auto flex justify-between items-center">
       <a href="/notes" class="text-3xl font-extrabold text-purple-400 hover:text-purple-300 transition-colors tracking-wider">
-        CYBERNET AI
+        NoteFlow
       </a>
+      <span id="helloUser" class="ml-3 text-3xl font-extrabold text-purple-300"></span>
       <div class="space-x-8 text-lg">
         <a href="/notes" class="text-gray-300 hover:text-purple-400 transition-colors">Notes</a>
         <a id="logoutLink" href="/login" class="text-gray-300 hover:text-purple-400 transition-colors">Cerrar sesión</a>
@@ -31,7 +32,6 @@
     <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-purple-700 pb-6">
       <h1 class="text-4xl md:text-5xl font-bold text-purple-400 mb-4 md:mb-0">Mis Notas</h1>
 
-      <!-- Nueva nota: navega al editor -->
       <a href="/note" class="px-6 py-3 bg-purple-700 text-white rounded-full shadow-lg btn-glow flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path d="M12 5v14"/><path d="M5 12h14"/>
@@ -45,7 +45,7 @@
   </main>
 
   <footer class="p-6 text-center text-gray-500 text-sm border-t-2 border-purple-800 shadow-inner shadow-purple-900/30">
-    &copy; 2025 CYBERNET AI. All rights reserved.
+    
   </footer>
 
 <script src="/js/notes.js" defer></script>

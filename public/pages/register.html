@@ -26,7 +26,12 @@
           class="input-glow shadow-inner appearance-none border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
           placeholder="user@noteflow.ai">
       </div>
-
+      <div>
+        <label for="username" class="block text-gray-400 text-lg font-bold mb-3">Username</label>
+        <input type="text" id="username" name="username" required
+          class="input-glow shadow-inner appearance-none border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+          placeholder="noteflow_" pattern="^(?=.{3,20}$)[a-z0-9]+(?:[_-][a-z0-9]+)*$">
+      </div>
       <div>
         <label for="password" class="block text-gray-400 text-lg font-bold mb-3">Password</label>
         <input type="password" id="password" name="password" required
