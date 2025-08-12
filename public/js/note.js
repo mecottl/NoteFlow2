@@ -1,29 +1,38 @@
-// src/public/js/note.js
 (() => {
+
+  // Ruteo principal
   const API = '/api';
   const token = localStorage.getItem('token');
   if (!token) return (window.location.href = '/login');
 
-  // --- DOM ---
-  const pageTitleEl = document.getElementById('pageTitle');
-  const statusEl    = document.getElementById('status');
-  const titleInput  = document.getElementById('noteTitle');
-  const editor      = document.getElementById('editor');
-  const ghost       = document.getElementById('ghost');
-  const saveBtn     = document.getElementById('saveBtn');
-  const deleteBtn   = document.getElementById('deleteBtn');
+  // DOM
+  const pageTitleEl = document.getElementById('pageTitle'); // Titulo
+  const statusEl    = document.getElementById('status'); 
+  const titleInput  = document.getElementById('noteTitle'); // Titulo de nota
+  const editor      = document.getElementById('editor'); // Texto
+  const ghost       = document.getElementById('ghost'); // IA Ghost
+  const saveBtn     = document.getElementById('saveBtn'); // Btn save
+  const deleteBtn   = document.getElementById('deleteBtn'); // Btn Delete
 
   const params = new URLSearchParams(location.search);
-  const id = params.get('id');
+  const id = params.get('id'); // si no hay, es nota nueva
+
+  // JWT utils (para key de borradores)
+  function parseJWT(t) {
+    try { return JSON.parse(atob(t.split('.')[1])); } catch { return null; }
+  }
+  const payload = parseJWT(token) || {};
+  const userKey = payload.sub || payload.email || payload.username || 'anon';
+  const DRAFT_KEY = (noteId) => `nf3:draft:${userKey}:${noteId || 'new'}`;
 
   // --- Heurísticas IA ---
-  const MIN_CHARS          = 8;    // empieza a sugerir temprano
-  const DEBOUNCE_MS        = 250;  // más ágil
-  const MAX_CONTEXT_CHARS  = 700;  // último bloque del texto
-  const MAX_TITLE_CHARS    = 120;  // título acotado
-  const MAX_TOKENS         = 22;   // respuesta breve (↑ rapidez)
+  const MIN_CHARS         = 8;
+  const DEBOUNCE_MS       = 250;
+  const MAX_CONTEXT_CHARS = 700;
+  const MAX_TITLE_CHARS   = 120;
+  const MAX_TOKENS        = 22;
 
-  // --- Estado ---
+  // --- Estado IA ---
   let suggestion = '';
   let debounceTimer;
   let lastQueryText = '';
@@ -31,7 +40,10 @@
   let ctrl; // AbortController
   const cache = new Map(); // snippet -> suggestion
 
-  // Utils
+  // --- Estado draft ---
+  let saveDraftTimer;
+
+  // --- Utils UI/HTTP ---
   function setStatus(msg, cls = 'text-gray-400') {
     if (!statusEl) return;
     statusEl.className = `text-sm ${cls}`;
@@ -55,30 +67,27 @@
            textarea.selectionEnd   === textarea.value.length;
   }
 
-  function syncHeights() {
-    ghost.style.height = 'auto';
-    editor.style.height = 'auto';
-    const h = Math.max(ghost.scrollHeight, editor.scrollHeight, 360);
-    ghost.style.height = h + 'px';
-    editor.style.height = h + 'px';
-  }
-
+  // Con altura fija (h-[70vh] en HTML), no cambiamos heights via JS
   function mirrorScroll() {
-    ghost.scrollTop = editor.scrollTop;
+    ghost.scrollTop  = editor.scrollTop;
     ghost.scrollLeft = editor.scrollLeft;
   }
 
   function renderGhost() {
     const base = escapeHTML(editor.value || '');
-    const sug  = suggestion ? `<span class="ghost-suggest">${escapeHTML(suggestion)} ⇥TAB</span>` : '';
-    ghost.innerHTML = base + sug;
-    syncHeights();
+    const sug  = suggestion
+      ? `<span class="text-purple-400/80">${escapeHTML(suggestion)} ⇥TAB</span>`
+      : '';
+    // Espacio separador si hace falta
+    const needsSpace = suggestion && editor.value && !/\s$/.test(editor.value);
+    ghost.innerHTML = base + (needsSpace ? '&nbsp;' : '') + sug;
+    // alturas ya están definidas por CSS (h-full)
+    mirrorScroll();
   }
 
-  // Prompt compacto: solo últimos N chars + título recortado
+  // Prompt compacto: últimos N chars + título
   function buildPrompt(text, title) {
-    const t = (text || '');
-    const last = t.slice(-MAX_CONTEXT_CHARS);
+    const last = (text || '').slice(-MAX_CONTEXT_CHARS);
     const titleTrim = (title || '').slice(0, MAX_TITLE_CHARS);
     return (
       (titleTrim ? `Título: ${titleTrim}\n` : '') +
@@ -87,26 +96,81 @@
     );
   }
 
+  // --- Borradores (localStorage) ---
+  function saveDraftDebounced() {
+    clearTimeout(saveDraftTimer);
+    saveDraftTimer = setTimeout(() => {
+      const draft = {
+        title: titleInput.value || '',
+        text:  editor.value     || '',
+        ts: Date.now()
+      };
+      try {
+        localStorage.setItem(DRAFT_KEY(id), JSON.stringify(draft));
+        setStatus('Borrador guardado localmente', 'text-gray-400');
+      } catch {}
+    }, 300);
+  }
+
+  function tryRestoreDraft(serverNoteTs) {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY(id));
+      if (!raw) return false;
+      const draft = JSON.parse(raw);
+      if (!draft) return false;
+
+      const draftIsNewer =
+        typeof draft.ts === 'number' &&
+        (!serverNoteTs || draft.ts > serverNoteTs);
+
+      if (draftIsNewer || !serverNoteTs) {
+        titleInput.value = draft.title || '';
+        editor.value     = draft.text  || '';
+        suggestion = '';
+        renderGhost();
+        setStatus('Borrador restaurado', 'text-green-400');
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
   // --- CRUD ---
   async function loadNote() {
     if (!id) {
       pageTitleEl && (pageTitleEl.textContent = 'Nueva Nota AI');
       deleteBtn && (deleteBtn.style.display = 'none');
+
+      // Restaurar borrador de "new"
+      tryRestoreDraft(null);
       renderGhost();
       return;
     }
+
     pageTitleEl && (pageTitleEl.textContent = `Editando Nota #${id}`);
     setStatus('Cargando nota...');
+
     try {
       const res = await fetch(`${API}/notes/${id}`, { headers: requireAuthHeaders(false) });
-      if (res.status === 401) { localStorage.removeItem('token'); return location.href = '/login'; }
+      if (res.status === 401) { localStorage.removeItem('token'); return (location.href = '/login'); }
       if (!res.ok) throw new Error('No se pudo cargar la nota');
       const note = await res.json();
-      titleInput.value = note.title || '';
-      editor.value = note.text || '';
-      suggestion = '';
-      renderGhost();
-      setStatus('');
+
+      const serverTs = note.updated_at ? new Date(note.updated_at).getTime()
+                     : note.created_at ? new Date(note.created_at).getTime()
+                     : 0;
+
+      // Si hay borrador más nuevo, restaurarlo; si no, usar servidor
+      const restored = tryRestoreDraft(serverTs);
+      if (!restored) {
+        titleInput.value = note.title || '';
+        editor.value     = note.text  || '';
+        suggestion = '';
+        renderGhost();
+        setStatus('');
+      }
     } catch (e) {
       console.error(e);
       setStatus('Error cargando la nota.', 'text-red-400');
@@ -123,19 +187,17 @@
     try {
       if (id) {
         const r = await fetch(`${API}/notes/${id}`, {
-          method: 'PUT',
-          headers: requireAuthHeaders(true),
-          body: JSON.stringify({ title, text })
+          method: 'PUT', headers: requireAuthHeaders(true), body: JSON.stringify({ title, text })
         });
         if (!r.ok) throw new Error('No se pudo actualizar la nota');
       } else {
         const r = await fetch(`${API}/notes`, {
-          method: 'POST',
-          headers: requireAuthHeaders(true),
-          body: JSON.stringify({ title, text })
+          method: 'POST', headers: requireAuthHeaders(true), body: JSON.stringify({ title, text })
         });
         if (!r.ok) throw new Error('No se pudo crear la nota');
       }
+      // limpiar borrador de esta nota
+      localStorage.removeItem(DRAFT_KEY(id));
       location.href = '/notes';
     } catch (e) {
       console.error(e);
@@ -152,6 +214,7 @@
     try {
       const r = await fetch(`${API}/notes/${id}`, { method: 'DELETE', headers: requireAuthHeaders(false) });
       if (!r.ok) throw new Error('No se pudo eliminar la nota');
+      localStorage.removeItem(DRAFT_KEY(id));
       location.href = '/notes';
     } catch (e) {
       console.error(e);
@@ -164,25 +227,25 @@
   // --- IA ---
   async function fetchSuggestion(text, title) {
     const snippet = (text || '').slice(-MAX_CONTEXT_CHARS);
-    // cache hit
     if (cache.has(snippet)) {
       suggestion = cache.get(snippet);
       renderGhost();
       return;
     }
 
-    // cancela request anterior si existe
     if (ctrl) ctrl.abort();
     ctrl = new AbortController();
-
-    const prompt = buildPrompt(text, title);
     const thisReq = ++inFlight;
 
     try {
       const res = await fetch(`${API}/ai/complete`, {
         method: 'POST',
         headers: requireAuthHeaders(true),
-        body: JSON.stringify({ prompt, max_tokens: MAX_TOKENS, temperature: 0.6 }),
+        body: JSON.stringify({
+          prompt: buildPrompt(text, title),
+          max_tokens: MAX_TOKENS,
+          temperature: 0.6
+        }),
         signal: ctrl.signal
       });
       if (!res.ok) {
@@ -211,13 +274,10 @@
     const text = editor.value || '';
     if (text.length < MIN_CHARS) return;
 
-    // solo dispara si el usuario hizo pequeña pausa o cerró palabra/segmento
-    // (último char es espacio o puntuación, o han pasado DEBOUNCE_MS)
     const lastChar = text.slice(-1);
     const looksLikeBoundary = /[\s\.\,\;\:\!\?]/.test(lastChar);
 
     debounceTimer = setTimeout(() => {
-      // evita golpes repetidos
       if (text === lastQueryText && suggestion) return;
       lastQueryText = text;
       const title = (titleInput.value || '').trim();
@@ -235,24 +295,21 @@
     editor.setSelectionRange(pos + toInsert.length, pos + toInsert.length);
     suggestion = '';
     renderGhost();
-    // prepara siguiente sugerencia
+    saveDraftDebounced();     // guardar tras aceptar
     setTimeout(scheduleSuggest, 220);
   }
 
   // --- Eventos ---
-  editor.addEventListener('input', () => { renderGhost(); scheduleSuggest(); });
-  
+  editor.addEventListener('input', () => { renderGhost(); scheduleSuggest(); saveDraftDebounced(); });
+  titleInput.addEventListener('input', () => { saveDraftDebounced(); });
+
   editor.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab' && suggestion) {
-      e.preventDefault();
-      acceptSuggestion();
-    }
+    if (e.key === 'Tab' && suggestion) { e.preventDefault(); acceptSuggestion(); }
   });
   editor.addEventListener('scroll', mirrorScroll);
-  window.addEventListener('resize', syncHeights);
 
-  saveBtn && saveBtn.addEventListener('click', saveNote);
-  deleteBtn && deleteBtn.addEventListener('click', deleteNote);
+  saveBtn  && saveBtn.addEventListener('click', saveNote);
+  deleteBtn&& deleteBtn.addEventListener('click', deleteNote);
 
   // init
   renderGhost();
