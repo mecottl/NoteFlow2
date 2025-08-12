@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url'
 // importa routers desde src/
 import usersRouter from './src/routes/users.js'
 import notesRouter from './src/routes/notes.js'
+import aiRouter from './src/routes/ai.js';
 
 const app = express()
 
@@ -33,8 +34,9 @@ app.get('/note',    (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'pages', 'n
 // API
 app.use('/api', usersRouter)  // /api/login, /api/register
 app.use('/api', notesRouter)  // /api/notes...
+app.use('/api/ai', aiRouter);
 
-// (opcional) 404 para páginas
+// 404 para páginas
 app.use((req,res)=>res.status(404).sendFile(path.join(PUBLIC_DIR,'pages','404.html')))
 
 export default app
