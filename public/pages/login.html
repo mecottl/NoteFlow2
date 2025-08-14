@@ -3,53 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Login</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Login - NoteFlow</title>
+  <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/note.css">
+  <link rel="icon" href="/images/icon.svg" type="image/svg+xml">
+
   <style>
-    .input-glow { box-shadow: 0 0 0 rgba(167,139,250,0); transition: .3s; }
+    .input-glow { box-shadow: 0 0 0 rgba(167,139,250,0); transition:.3s; }
     .input-glow:focus { box-shadow: 0 0 8px rgba(167,139,250,.6); border-color:#a78bfa; }
     .btn-glow { box-shadow: 0 0 5px #a78bfa, 0 0 15px #a78bfa; transition:.3s; }
     .btn-glow:hover { box-shadow: 0 0 10px #c084fc,0 0 25px #c084fc,0 0 40px #c084fc; transform: scale(1.05); }
     .bg-circuit { background-image:url('/placeholder.svg?height=500&width=500'); background-size:cover; background-position:center; opacity:.1; }
   </style>
 </head>
-<body class="bg-gray-950 text-gray-100 font-mono min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
-  <div class="absolute inset-0 bg-circuit"></div>
-
-  <div class="bg-gray-900 p-10 rounded-xl shadow-2xl border-2 border-purple-800 w-full max-w-md relative z-10 transform transition-all duration-500 hover:scale-[1.01] hover:shadow-purple-900/70">
-    <h2 class="text-5xl font-bold text-center mb-10 text-purple-400 tracking-wide">Login</h2>
-
-    <form id="loginForm" class="space-y-6">
-      <div>
-        <label for="email" class="block text-gray-400 text-lg font-bold mb-3">Email</label>
-        <input type="email" id="email" name="email" required
-          class="input-glow shadow-inner border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-          placeholder="email o username" />
+<body class="bg-gray-950 text-gray-100 font-sans min-h-screen bg-grid">
+  <header class="p-6 border-b-2 border-purple-800 shadow-lg shadow-purple-900/30">
+    <nav class="container mx-auto flex justify-between items-center">
+      <a href="/" class="text-3xl font-extrabold text-purple-400 hover:text-purple-300 transition-colors tracking-wider glow-text">Note Flow</a>
+      <div class="space-x-8 text-lg">
+        <a href="/" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">← Inicio</a>
+        <a href="/register" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">Register</a>
       </div>
+    </nav>
+  </header>
 
-      <div>
-        <label for="password" class="block text-gray-400 text-lg font-bold mb-3">Password</label>
-        <input type="password" id="password" name="password" required
-          class="input-glow shadow-inner border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-          placeholder="••••••••••••" />
-      </div>
+  <main class="relative p-6 grid place-items-center">
+    <div class="absolute inset-0 bg-circuit"></div>
 
-      <button id="submitBtn" type="submit"
-        class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-full w-full text-xl btn-glow">
-        Login
-      </button>
+    <div class="bg-gray-900 p-10 rounded-xl shadow-2xl border-2 border-purple-800 w-full max-w-md relative z-10 transform transition-all duration-500 hover:scale-[1.01] hover:shadow-purple-900/70 mt-5">
+      <h2 class="text-5xl font-bold text-center mb-10 text-purple-400 tracking-wide">Login</h2>
 
-      <!-- MENSAJES -->
-      <p id="message" class="text-center text-sm"></p>
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label for="email" class="block text-gray-400 text-lg font-bold mb-3">Email</label>
+          <input type="email" id="email" name="email" required
+            class="input-glow shadow-inner appearance-none border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            placeholder="email o username">
+        </div>
+        <div>
+          <label for="password" class="block text-gray-400 text-lg font-bold mb-3">Password</label>
+          <input type="password" id="password" name="password" required
+            class="input-glow shadow-inner appearance-none border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            placeholder="••••••••••••">
+        </div>
 
-      <p class="text-center text-gray-400 text-md">
-        New to the network?
-        <a href="/register" class="text-purple-400 hover:text-purple-300 font-bold transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">
-          Register Account
-        </a>.
-      </p>
-    </form>
-  </div>
+        <button id="submitBtn" type="submit"
+          class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-full w-full text-xl btn-glow">
+          Login
+        </button>
+
+        <p id="message" class="text-center text-sm"></p>
+
+        <p class="text-center text-gray-400 text-md">
+          New to the network?
+          <a href="/register" class="text-purple-400 hover:text-purple-300 font-bold transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">
+            Register Account
+          </a>.
+        </p>
+      </form>
+    </div>
+  </main>
 
   <script src="/js/login.js" defer></script>
 </body>

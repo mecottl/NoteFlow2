@@ -1,44 +1,121 @@
-/* Sombras utilitarias que no cubre Tailwind de serie */
-.btn-glow {
-  box-shadow: 0 0 5px #a78bfa, 0 0 15px #a78bfa;
-  transition: .3s;
-}
-.btn-glow:hover {
-  box-shadow: 0 0 10px #c084fc, 0 0 25px #c084fc, 0 0 40px #c084fc;
-  transform: scale(1.03);
-}
-.input-glow {
-  box-shadow: 0 0 0 rgba(167,139,250,0);
-  transition: .3s;
-}
-.input-glow:focus {
-  box-shadow: 0 0 8px rgba(167,139,250,.6);
-  border-color: #a78bfa;
+/* Fuentes */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap");
+
+/* Variables */
+:root{
+  --editor-font-size: 18px;
+  --editor-line-height: 1.7;
+  --editor-letter-spacing: 0.02em;
+  --editor-tab-size: 2;
+  --purple-primary: #a78bfa;
+  --purple-secondary: #c084fc;
+  --purple-accent: #db2777;
 }
 
-/* Tab width: Tailwind no trae util por defecto */
-.tab-2 { tab-size: 2; }
+/* Contenedor con borde animado y fondo */
+.editor-container{
+  position: relative;
+  background: linear-gradient(135deg, rgba(15,23,42,.95), rgba(30,41,59,.98));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 16px;
+  overflow: hidden;
+}
 
-/* Scrollbar bonito (sólo para el textarea) */
-.editor-scroll {
-  scrollbar-width: thin;               /* Firefox */
-  scrollbar-color: #a78bfa66 #0f172a;  /* thumb / track */
+.editor-container::before{
+  content:"";
+  position:absolute; inset:0; padding:2px;
+  background: linear-gradient(45deg, var(--purple-primary), var(--purple-secondary), var(--purple-accent));
+  border-radius: inherit;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: border-pulse 3s ease-in-out infinite;
 }
-.editor-scroll::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+@keyframes border-pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+/* Ghost y Editor: tipografía y sincronía fina que Tailwind no cubre */
+#ghost,
+#editor{
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--editor-font-size);
+  line-height: var(--editor-line-height);
+  letter-spacing: var(--editor-letter-spacing);
+  tab-size: var(--editor-tab-size);
 }
-.editor-scroll::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, #0b1020, #0f172a);
-  border-radius: 12px;
+#ghost{
+  /* el color transparente ya lo doy con Tailwind (text-transparent), lo dejo igual por seguridad */
+  color: transparent;
+  pointer-events: none;     /* no bloquea el scroll/selección del editor */
+  overflow: auto;           /* permite sincronizar el scroll con el editor */
+  z-index: 1;
 }
-.editor-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #a78bfa, #8b5cf6);
-  border-radius: 12px;
-  border: 2px solid #0f172a;
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.35);
+
+#editor{
+  position: absolute;       /* antes: relative */
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  /* ...mantén el resto (padding, font, etc.) ... */
+  z-index: 2;
 }
-.editor-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #c084fc, #a78bfa);
-  box-shadow: 0 0 12px rgba(192, 132, 252, 0.55);
+
+/* Editor: detalles visuales extra */
+#editor::placeholder{ color: rgba(148,163,184,.6); font-style: italic; }
+#editor:focus{ box-shadow: inset 0 0 0 2px rgba(167,139,250,.3); }
+#editor{ caret-color: var(--purple-primary); }
+
+/* Scrollbar del área de edición */
+.editor-scroll{ scrollbar-width: thin; scrollbar-color: rgba(167,139,250,.6) rgba(15,23,42,.8); }
+.editor-scroll::-webkit-scrollbar{ width:12px; height:12px; }
+.editor-scroll::-webkit-scrollbar-track{
+  background: linear-gradient(180deg, rgba(15,23,42,.8), rgba(30,41,59,.9));
+  border-radius:8px; border:1px solid rgba(51,65,85,.3);
 }
+.editor-scroll::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, var(--purple-primary), var(--purple-secondary));
+  border-radius:8px; border:2px solid rgba(15,23,42,.8);
+  box-shadow:0 0 10px rgba(167,139,250,.3);
+}
+.editor-scroll::-webkit-scrollbar-thumb:hover{
+  background: linear-gradient(180deg, var(--purple-secondary), var(--purple-accent));
+  box-shadow:0 0 15px rgba(192,132,252,.5);
+}
+.editor-scroll::-webkit-scrollbar-corner{ background: rgba(15,23,42,.8); }
+
+/* Título: solo la fuente (lo demás lo hace Tailwind) */
+.note-title-input{ font-family: "Orbitron", system-ui, sans-serif; }
+
+/* Asistente IA flotante (animación y tooltip) */
+.ai-assistant{
+  position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+  background: linear-gradient(135deg, var(--purple-primary), var(--purple-secondary));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 30px rgba(167,139,250,.6); cursor: pointer; transition: all .3s ease;
+  z-index: 1000; animation: ai-pulse 2s ease-in-out infinite;
+}
+@keyframes ai-pulse{0%,100%{box-shadow:0 0 30px rgba(167,139,250,.6); transform:scale(1)}50%{box-shadow:0 0 40px rgba(192,132,252,.8); transform:scale(1.05)}}
+.ai-assistant:hover{ transform:scale(1.1); box-shadow:0 0 50px rgba(167,139,250,.8); }
+.ai-assistant svg{ width:24px; height:24px; color:#fff; }
+.ai-tooltip{
+  position:absolute; bottom:70px; right:0; background:rgba(30,41,59,.95);
+  border:1px solid rgba(167,139,250,.3); border-radius:8px; padding:8px 12px;
+  font-size:.75rem; color:#e2e8f0; white-space:nowrap; opacity:0; transform:translateY(10px);
+  transition: all .3s ease; backdrop-filter: blur(10px);
+}
+.ai-assistant:hover .ai-tooltip{ opacity:1; transform:translateY(0); }
+
+/* Efecto de fondo cuadriculado */
+.neural-grid{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(167,139,250,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167,139,250,.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events:none; z-index:0;
+}
+
+/* Utilidad opcional para “escribiendo” */
+@keyframes typing-indicator{0%,50%{opacity:1}51%,100%{opacity:0}}
+.typing-indicator{ animation: typing-indicator 1s infinite; }

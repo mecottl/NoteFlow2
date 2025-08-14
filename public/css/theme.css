@@ -1,0 +1,65 @@
+/* Base y tamaño consistente en todos lados */
+html {
+  font-size: 16px;
+}
+
+/* Glow general */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 5px #a78bfa, 0 0 10px #a78bfa, 0 0 15px #a78bfa;
+  }
+  50% {
+    text-shadow: 0 0 10px #c084fc, 0 0 20px #c084fc, 0 0 30px #c084fc;
+  }
+}
+.glow-text {
+  animation: pulse-glow 2s infinite alternate;
+}
+
+/* Botón */
+.btn-glow {
+  box-shadow: 0 0 5px #a78bfa, 0 0 15px #a78bfa;
+  transition: all .3s ease-in-out;
+}
+.btn-glow:hover {
+  box-shadow: 0 0 10px #c084fc, 0 0 25px #c084fc, 0 0 40px #c084fc;
+  transform: scale(1.05);
+}
+
+/* Bordes glow */
+.border-glow {
+  border-image: linear-gradient(to right, #a78bfa, #c084fc, #db2777) 1;
+  border-width: 2px;
+  border-style: solid;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
+  transition: all .3s ease-in-out;
+}
+.border-glow:hover {
+  box-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
+}
+
+/* Fondo grid */
+.bg-grid {
+  background-image: linear-gradient(to right, rgba(129, 140, 248, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(129, 140, 248, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Inputs */
+.input-glow {
+  box-shadow: 0 0 0 rgba(167, 139, 250, 0);
+  transition: .3s;
+}
+.input-glow:focus {
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
+  border-color: #a78bfa;
+}
+
+/* Fondo decorativo */
+.bg-circuit {
+  background-image: url("/placeholder.svg?height=500&width=500");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+}

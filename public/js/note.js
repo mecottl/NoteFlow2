@@ -149,7 +149,7 @@
       return;
     }
 
-    pageTitleEl && (pageTitleEl.textContent = `Editando Nota #${id}`);
+    pageTitleEl && (pageTitleEl.textContent = `Editando Nota`);
     setStatus('Cargando nota...');
 
     try {
@@ -298,6 +298,18 @@
     saveDraftDebounced();     // guardar tras aceptar
     setTimeout(scheduleSuggest, 220);
   }
+    // Contador de palabras en tiempo real
+    const wordCount = document.getElementById('wordCount');
+    
+    function updateWordCount() {
+      const text = editor.value.trim();
+      const words = text === '' ? 0 : text.split(/\s+/).length;
+      wordCount.textContent = words.toLocaleString();
+    }
+    
+    editor.addEventListener('input', updateWordCount);
+    updateWordCount(); // Inicializar
+  
 
   // --- Eventos ---
   editor.addEventListener('input', () => { renderGhost(); scheduleSuggest(); saveDraftDebounced(); });
@@ -310,6 +322,58 @@
 
   saveBtn  && saveBtn.addEventListener('click', saveNote);
   deleteBtn&& deleteBtn.addEventListener('click', deleteNote);
+
+  // ----------------------------------------
+    
+  if (!editor || !ghost) return;
+
+  const THRESHOLD = 32; // px desde el fondo para considerar "estoy abajo"
+
+  const atBottom = (el) =>
+    el.scrollTop + el.clientHeight >= el.scrollHeight - THRESHOLD;
+
+  const caretNearEnd = () =>
+    typeof editor.selectionStart === 'number' &&
+    editor.selectionStart >= editor.value.length - 1;
+
+  const syncScroll = () => {
+    ghost.scrollTop  = editor.scrollTop;
+    ghost.scrollLeft = editor.scrollLeft;
+  };
+
+  const maybeAutoScroll = (force = false) => {
+    const should = force || atBottom(editor) || caretNearEnd();
+    if (should) {
+      // Toma el mayor alto entre capas y baja hasta el final
+      const target = Math.max(editor.scrollHeight, ghost.scrollHeight);
+      editor.scrollTop = target;
+      ghost.scrollTop  = editor.scrollTop;
+    }
+  };
+
+  // Mientras escribes
+  editor.addEventListener('input', () => {
+    requestAnimationFrame(() => maybeAutoScroll(false));
+  });
+
+  // Si haces scroll manual, que el ghost “siga”
+  editor.addEventListener('scroll', syncScroll);
+
+  // Si el ghost cambia (p.ej. IA mete sugerencias), también autoscroll si estabas abajo
+  const mo = new MutationObserver(() => {
+    requestAnimationFrame(() => maybeAutoScroll(false));
+  });
+  mo.observe(ghost, { childList: true, subtree: true, characterData: true });
+
+  // Utilidad opcional: si en otro lado actualizas el ghost
+  window.updateGhost = (html) => {
+    const wasBottom = atBottom(editor);
+    ghost.innerHTML = html;
+    requestAnimationFrame(() => maybeAutoScroll(wasBottom));
+  };
+
+  // Alineación inicial
+  requestAnimationFrame(() => { syncScroll(); maybeAutoScroll(true); });
 
   // init
   renderGhost();

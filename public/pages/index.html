@@ -3,72 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NoteFlow 2.0</title>
+  <title>NoteFlow</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes pulse-glow {
-      0%, 100% { text-shadow: 0 0 5px #a78bfa, 0 0 10px #a78bfa, 0 0 15px #a78bfa; }
-      50% { text-shadow: 0 0 10px #c084fc, 0 0 20px #c084fc, 0 0 30px #c084fc; }
-    }
-    .glow-text {
-      animation: pulse-glow 2s infinite alternate;
-    }
-    .btn-glow {
-      box-shadow: 0 0 5px #a78bfa, 0 0 15px #a78bfa;
-      transition: all 0.3s ease-in-out;
-    }
-    .btn-glow:hover {
-      box-shadow: 0 0 10px #c084fc, 0 0 25px #c084fc, 0 0 40px #c084fc;
-      transform: scale(1.05);
-    }
-    .border-glow {
-      border-image: linear-gradient(to right, #a78bfa, #c084fc, #db2777) 1;
-      border-width: 2px;
-      border-style: solid;
-      box-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
-      transition: all 0.3s ease-in-out;
-    }
-    .border-glow:hover {
-      box-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
-    }
-    .bg-grid {
-      background-image: 
-        linear-gradient(to right, rgba(129, 140, 248, 0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(129, 140, 248, 0.1) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/index.css">
 </head>
-<body class="bg-gray-950 text-gray-100 font-mono min-h-screen flex flex-col bg-grid">
-  <header class="p-6 border-b-2 border-purple-800 shadow-lg shadow-purple-900/30">
-      <nav class="container mx-auto flex justify-between items-center">
-          <a href="/index" class="text-3xl font-extrabold text-purple-400 hover:text-purple-300 transition-colors tracking-wider glow-text">Note Flow</a>
-          <div class="space-x-8 text-lg">
-              <a href="/login" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">Login</a>
-              <a href="/register" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">Register</a>
-          </div>
-      </nav>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col bg-grid">
+  
+  <!-- Floating Particles -->
+  <div class="floating-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <header class="p-6 border-b-2 border-purple-800 shadow-lg shadow-purple-900/30 relative z-10">
+    <nav class="container mx-auto flex justify-between items-center">
+      <a href="/" class="text-3xl font-extrabold text-purple-400 hover:text-purple-300 transition-colors tracking-wider glow-text glitch">
+        NoteFlow
+      </a>
+      <div class="space-x-8 text-2xl">
+        <a href="/login" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">
+          Login
+        </a>
+        <a href="/register" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">
+          Register
+        </a>
+      </div>
+    </nav>
   </header>
 
-  <main class="flex-grow flex items-center justify-center p-6 relative overflow-hidden">
-      <div class="absolute inset-0 opacity-10" style="background-image: url('/placeholder.svg?height=1000&width=1000'); background-size: cover; background-position: center;"></div>
-      <section class="text-center max-w-4xl relative z-10 bg-gray-950/70 p-10 rounded-xl border-2 border-purple-900 shadow-2xl shadow-purple-900/50">
-          <h1 class="text-7xl font-ligth mb-8 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 glow-text cursor-default">
-              Extiende tus pensamientos con IA
-          </h1>
-          <p class="text-2xl text-gray-300 mb-12 max-w-2xl mx-auto cursor-crosshair">
-            Experimenta la siguiente generación con NoteFlow. La IA te ayuda a transformar tus ideas en ejecutables, potenciado con inteligencia avanzada  
-          </p>
-          <div class="space-x-6">
-              <a href="/register" class="inline-block px-10 py-5 bg-purple-700 text-white text-xl font-semibold rounded-full shadow-lg btn-glow border border-purple-500">
-                  Inicia tu bloc de notas
-              </a>
+  <main class="flex-grow flex items-center justify-center p-6 relative overflow-hidden hero-container">
+    <section class="text-center max-w-5xl relative z-10 bg-gray-950/70 p-12 rounded-2xl border-2 border-purple-900 shadow-2xl shadow-purple-900/50 backdrop-blur-sm">
+      <h1 class="text-8xl font-bold mb-8 leading-tight text-transparent bg-clip-text hero-title">
+        Extiende tus pensamientos con IA
+      </h1>
+      <p class="text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+        Experimenta la siguiente generación de toma de notas. NoteFlow utiliza inteligencia artificial avanzada para transformar tus ideas en insights accionables y potenciar tu creatividad.
+      </p>
+      
+      <!-- Feature Cards -->
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <div class="feature-card p-6 rounded-xl floating">
+          <div class="text-purple-400 mb-4">
+            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
           </div>
-      </section>
+          <h3 class="text-xl font-bold text-purple-300 mb-2">IA Inteligente</h3>
+          <p class="text-gray-400 text-sm">Sugerencias automáticas y análisis de contenido en tiempo real</p>
+        </div>
+        
+        <div class="feature-card p-6 rounded-xl floating" style="animation-delay: 0.5s;">
+          <div class="text-purple-400 mb-4">
+            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-purple-300 mb-2">Seguridad Total</h3>
+          <p class="text-gray-400 text-sm">Encriptación de extremo a extremo para proteger tus ideas</p>
+        </div>
+        
+        <div class="feature-card p-6 rounded-xl floating" style="animation-delay: 1s;">
+          <div class="text-purple-400 mb-4">
+            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-purple-300 mb-2">Velocidad Extrema</h3>
+          <p class="text-gray-400 text-sm">Sincronización instantánea en todos tus dispositivos</p>
+        </div>
+      </div>
+
+    </section>
   </main>
 
-  <footer class="p-6 text-center text-gray-500 text-sm border-t-2 border-purple-800 shadow-inner shadow-purple-900/30">
-      2025 Gerardo Mecott. NoteFlow
+  <footer class="p-6 text-center text-gray-500 text-sm border-t-2 border-purple-800 shadow-inner shadow-purple-900/30 relative z-10">
+    <div class="container mx-auto">
+      <p>&copy; 2025 Gerardo Mecott. NoteFlow</p>
+      <p class="mt-2 text-xs text-purple-400">Conectando mentes • Potenciando ideas • Transformando el futuro</p>
+    </div>
   </footer>
 </body>
 </html>
