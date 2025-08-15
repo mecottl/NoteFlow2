@@ -4,12 +4,19 @@
   const submitBtn = document.getElementById('submitBtn');
   const API = '/api';
 
+  // Helper para setear mensaje y clases correctamente
+  function setMessage(type, text) {
+    // Mantén siempre la clase base 'message'
+    messageEl.className = 'message';
+    if (type) messageEl.classList.add(type); // 'success' | 'error' | 'info'
+    messageEl.textContent = text || '';
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    messageEl.textContent = '';
-    messageEl.className = 'text-center text-sm';
+
+    setMessage('info', 'Procesando...');
     submitBtn.disabled = true;
-    submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
     submitBtn.textContent = 'Ingresando...';
 
     const credentials = {
@@ -29,20 +36,16 @@
         const msg = data?.errors
           ? data.errors.map(err => `${err.field}: ${err.message}`).join(', ')
           : (data?.error || 'Error desconocido');
-        messageEl.textContent = msg;
-        messageEl.classList.add('text-red-400');
+        setMessage('error', msg);
       } else {
-        messageEl.textContent = '¡Login exitoso!';
-        messageEl.classList.add('text-green-400');
+        setMessage('success', '¡Login exitoso!');
         localStorage.setItem('token', data.token);
         setTimeout(() => { window.location.href = '/notes'; }, 500);
       }
     } catch {
-      messageEl.textContent = 'Error de conexión';
-      messageEl.classList.add('text-red-400');
+      setMessage('error', 'Error de conexión');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
       submitBtn.textContent = 'Login';
     }
   });

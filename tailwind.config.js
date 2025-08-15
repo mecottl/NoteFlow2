@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["Inter", "system-ui", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
+        mono: ["ui-system-ui", "SFMono-Regular", "Menlo", "Consolas", "system-ui"],
       },
     },
   },

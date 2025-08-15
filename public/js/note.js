@@ -298,17 +298,7 @@
     saveDraftDebounced();     // guardar tras aceptar
     setTimeout(scheduleSuggest, 220);
   }
-    // Contador de palabras en tiempo real
-    const wordCount = document.getElementById('wordCount');
-    
-    function updateWordCount() {
-      const text = editor.value.trim();
-      const words = text === '' ? 0 : text.split(/\s+/).length;
-      wordCount.textContent = words.toLocaleString();
-    }
-    
-    editor.addEventListener('input', updateWordCount);
-    updateWordCount(); // Inicializar
+   
   
 
   // --- Eventos ---

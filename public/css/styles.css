@@ -15,7 +15,7 @@
 }
 
 body {
-  font-family: "Rajdhani", monospace;
+  font-family: "Rajdhani", system-ui;
   background: var(--dark-bg);
   color: #e2e8f0;
   overflow-x: hidden;

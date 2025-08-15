@@ -1,121 +1,571 @@
 /* Fuentes */
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap");
 
-/* Variables */
-:root{
+/* =========================================
+   Variables (solo las que SÍ usa note.css)
+========================================= */
+:root {
+  /* Editor */
   --editor-font-size: 18px;
   --editor-line-height: 1.7;
   --editor-letter-spacing: 0.02em;
   --editor-tab-size: 2;
+
+  /* Paleta necesaria */
   --purple-primary: #a78bfa;
   --purple-secondary: #c084fc;
   --purple-accent: #db2777;
+
+  --purple-800: #6b21a8;
+  --purple-700: #7c3aed;
+  --purple-600: #9333ea;
+  --purple-500: #a855f7;
+  --purple-400: #c084fc;
+  --purple-300: #d8b4fe;
+
+  --fuchsia-500: #d946ef;
+  --rose-400: #fb7185;
+
+  --gray-950: #030712;
+  --gray-100: #f3f4f6;
+  --gray-500: #6b7280;
+  --gray-400: #9ca3af;
+
+  --slate-200: #e2e8f0;
+
+  --red-600: #dc2626;
+  --red-500: #ef4444;
+
+  --green-400: #4ade80;
+  --yellow-400: #facc15;
 }
 
-/* Contenedor con borde animado y fondo */
-.editor-container{
+/* =========================================
+   Layout local (lo global vive en global.css)
+========================================= */
+
+.body-root {
+  background-color: var(--gray-950);
+  color: var(--gray-100);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  background: linear-gradient(135deg, rgba(15,23,42,.95), rgba(30,41,59,.98));
-  border: 2px solid transparent;
-  background-clip: padding-box;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Header local de note */
+.header {
+  padding: 24px;
+  border-bottom: 2px solid var(--purple-800);
+  box-shadow: 0 10px 15px -3px rgba(147, 51, 234, 0.3);
+  position: relative;
+  z-index: 10;
+  background-color: rgba(3, 7, 18, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+}
+.hero-container {
+  position: relative;
+  background: radial-gradient(ellipse at center, #a78bfa1a 0%, transparent 70%);
+}
+.back-link {
+  color: var(--purple-400);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--purple-300);
+  transform: scale(1.05);
+}
+
+.back-text-short {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .back-text-full {
+    display: none;
+  }
+
+  .back-text-short {
+    display: inline;
+  }
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--purple-400);
+  text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+}
+
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 30px;
+  }
+}
+
+/* Main */
+.main-content {
+  max-width: 80%;
+  width: 80%;
+  margin: 0 auto;
+  height: auto;
+  min-height: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  z-index: 10;
+      background: radial-gradient(ellipse at center, #a78bfa1a 0%, transparent 70%);
+}
+
+@media (min-width: 768px) {
+  .main-content {
+    padding: 32px;
+  }
+}
+
+.status-indicator {
+  margin: 0 auto;
+  width: 100%;
+  background-color: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(196, 181, 253, 0.3);
+  border-radius: 8px;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(196, 181, 253, 0.9);
+  backdrop-filter: blur(4px);
+}
+
+.status-indicator:empty {
+  display: none;
+  /* ← FIX: no se muestra el recuadro si no hay mensaje */
+}
+
+/* Title input */
+.note-title-input {
+  width: 100%;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: 24px;
+  font-weight: 700;
+  background-color: transparent;
+  border: 2px solid rgba(196, 181, 253, 0.3);
+  color: var(--purple-300);
+  transition: all 0.3s ease;
+  font-family: "Orbitron", system-ui, sans-serif;
+}
+
+.note-title-input::placeholder {
+  color: rgba(168, 85, 247, 0.5);
+}
+
+.note-title-input:focus {
+  outline: none;
+  border-color: var(--purple-600);
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.3);
+}
+
+@media (min-width: 768px) {
+  .note-title-input {
+    padding: 24px;
+    font-size: 30px;
+  }
+}
+
+/* Editor container (altura controlada) */
+.editor-container {
+  position: relative;
+  height: 70vh;
+  min-height: 0;
   border-radius: 16px;
   overflow: hidden;
+  background: linear-gradient(135deg, rgba(15, 23, 42, .95), rgba(30, 41, 59, .98));
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
-.editor-container::before{
-  content:"";
-  position:absolute; inset:0; padding:2px;
+@media (min-width: 768px) {
+  .editor-container {
+    height: 52vh !important;
+  }
+}
+
+.editor-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
   background: linear-gradient(45deg, var(--purple-primary), var(--purple-secondary), var(--purple-accent));
   border-radius: inherit;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
-          mask-composite: exclude;
+  mask-composite: exclude;
   animation: border-pulse 3s ease-in-out infinite;
 }
-@keyframes border-pulse{0%,100%{opacity:.6}50%{opacity:1}}
 
-/* Ghost y Editor: tipografía y sincronía fina que Tailwind no cubre */
-#ghost,
-#editor{
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+@keyframes border-pulse {
+
+  0%,
+  100% {
+    opacity: .6
+  }
+
+  50% {
+    opacity: 1
+  }
+}
+
+/* Ghost layer */
+.ghost-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 24px;
+  color: transparent;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+  pointer-events: none;
+  font-family: "JetBrains Mono", ui-system-ui, SFMono-Regular, Menlo, Consolas, system-ui;
   font-size: var(--editor-font-size);
   line-height: var(--editor-line-height);
   letter-spacing: var(--editor-letter-spacing);
   tab-size: var(--editor-tab-size);
-}
-#ghost{
-  /* el color transparente ya lo doy con Tailwind (text-transparent), lo dejo igual por seguridad */
-  color: transparent;
-  pointer-events: none;     /* no bloquea el scroll/selección del editor */
-  overflow: auto;           /* permite sincronizar el scroll con el editor */
-  z-index: 1;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(167, 139, 250, .6) rgba(15, 23, 42, .8);
 }
 
-#editor{
-  position: absolute;       /* antes: relative */
-  top: 0; left: 0; right: 0; bottom: 0;
+.ghost-layer::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.ghost-layer::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, rgba(15, 23, 42, .8), rgba(30, 41, 59, .9));
+  border-radius: 8px;
+  border: 1px solid rgba(51, 65, 85, .3);
+}
+
+.ghost-layer::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--purple-primary), var(--purple-secondary));
+  border-radius: 8px;
+  border: 2px solid rgba(15, 23, 42, .8);
+  box-shadow: 0 0 10px rgba(167, 139, 250, .3);
+}
+
+.ghost-layer::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--purple-secondary), var(--purple-accent));
+  box-shadow: 0 0 15px rgba(192, 132, 252, .5);
+}
+
+.ghost-layer::-webkit-scrollbar-corner {
+  background: rgba(15, 23, 42, .8);
+}
+
+/* Editor textarea */
+.editor-textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
-  /* ...mantén el resto (padding, font, etc.) ... */
   z-index: 2;
+  box-sizing: border-box;
+  padding: 24px;
+  background-color: transparent;
+  border: 0;
+  outline: none;
+  resize: none;
+  color: var(--slate-200);
+  caret-color: var(--purple-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: auto;
+  font-family: "JetBrains Mono", ui-system-ui, SFMono-Regular, Menlo, Consolas, system-ui;
+  font-size: var(--editor-font-size);
+  line-height: var(--editor-line-height);
+  letter-spacing: var(--editor-letter-spacing);
+  tab-size: var(--editor-tab-size);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(167, 139, 250, .6) rgba(15, 23, 42, .8);
 }
 
-/* Editor: detalles visuales extra */
-#editor::placeholder{ color: rgba(148,163,184,.6); font-style: italic; }
-#editor:focus{ box-shadow: inset 0 0 0 2px rgba(167,139,250,.3); }
-#editor{ caret-color: var(--purple-primary); }
-
-/* Scrollbar del área de edición */
-.editor-scroll{ scrollbar-width: thin; scrollbar-color: rgba(167,139,250,.6) rgba(15,23,42,.8); }
-.editor-scroll::-webkit-scrollbar{ width:12px; height:12px; }
-.editor-scroll::-webkit-scrollbar-track{
-  background: linear-gradient(180deg, rgba(15,23,42,.8), rgba(30,41,59,.9));
-  border-radius:8px; border:1px solid rgba(51,65,85,.3);
+.editor-textarea::placeholder {
+  color: rgba(148, 163, 184, .6);
+  font-style: italic;
 }
-.editor-scroll::-webkit-scrollbar-thumb{
+
+.editor-textarea:focus {
+  box-shadow: inset 0 0 0 2px rgba(167, 139, 250, .3);
+}
+
+.editor-textarea::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.editor-textarea::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, rgba(15, 23, 42, .8), rgba(30, 41, 59, .9));
+  border-radius: 8px;
+  border: 1px solid rgba(51, 65, 85, .3);
+}
+
+.editor-textarea::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--purple-primary), var(--purple-secondary));
-  border-radius:8px; border:2px solid rgba(15,23,42,.8);
-  box-shadow:0 0 10px rgba(167,139,250,.3);
+  border-radius: 8px;
+  border: 2px solid rgba(15, 23, 42, .8);
+  box-shadow: 0 0 10px rgba(167, 139, 250, .3);
 }
-.editor-scroll::-webkit-scrollbar-thumb:hover{
+
+.editor-textarea::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, var(--purple-secondary), var(--purple-accent));
-  box-shadow:0 0 15px rgba(192,132,252,.5);
+  box-shadow: 0 0 15px rgba(192, 132, 252, .5);
 }
-.editor-scroll::-webkit-scrollbar-corner{ background: rgba(15,23,42,.8); }
 
-/* Título: solo la fuente (lo demás lo hace Tailwind) */
-.note-title-input{ font-family: "Orbitron", system-ui, sans-serif; }
+.editor-textarea::-webkit-scrollbar-corner {
+  background: rgba(15, 23, 42, .8);
+}
 
-/* Asistente IA flotante (animación y tooltip) */
-.ai-assistant{
-  position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+/* Word counter (si lo reactivas) */
+.word-counter {
+  position: absolute;
+  bottom: 16px;
+  right: 24px;
+  z-index: 3;
+  background-color: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(196, 181, 253, 0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: rgba(196, 181, 253, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+/* Botones acción */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: stretch;
+}
+
+@media (min-width: 640px) {
+  .action-buttons {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.delete-btn,
+.save-btn {
+  padding: 12px 24px;
+  color: white;
+  border-radius: 25px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, var(--red-600), var(--red-500));
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, var(--red-500), var(--rose-400));
+  transform: translateY(-2px) scale(1.02);
+}
+
+.save-btn {
+  background: linear-gradient(135deg, var(--purple-700), var(--purple-500));
+}
+
+.save-btn:hover {
+  background: linear-gradient(135deg, var(--purple-600), var(--fuchsia-500));
+  transform: translateY(-2px) scale(1.02);
+}
+
+@media (min-width: 768px) {
+
+  .delete-btn,
+  .save-btn {
+    padding: 16px 32px;
+    font-size: 18px;
+  }
+}
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+}
+
+.delete-btn:disabled,
+.save-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Footer local */
+.footer {
+  padding: 16px 24px;
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 12px;
+  border-top: 2px solid var(--purple-800);
+  box-shadow: inset 0 1px 3px 0 rgba(147, 51, 234, 0.3);
+  position: relative;
+  z-index: 10;
+  background-color: rgba(3, 7, 18, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+@media (min-width: 768px) {
+  .footer {
+    padding: 24px;
+    font-size: 14px;
+  }
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-subtitle {
+  margin-top: 4px;
+  color: rgba(168, 85, 247, 0.6);
+}
+
+/* AI assistant (opcional, no afecta aquí) */
+.ai-assistant {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
   background: linear-gradient(135deg, var(--purple-primary), var(--purple-secondary));
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 30px rgba(167,139,250,.6); cursor: pointer; transition: all .3s ease;
-  z-index: 1000; animation: ai-pulse 2s ease-in-out infinite;
-}
-@keyframes ai-pulse{0%,100%{box-shadow:0 0 30px rgba(167,139,250,.6); transform:scale(1)}50%{box-shadow:0 0 40px rgba(192,132,252,.8); transform:scale(1.05)}}
-.ai-assistant:hover{ transform:scale(1.1); box-shadow:0 0 50px rgba(167,139,250,.8); }
-.ai-assistant svg{ width:24px; height:24px; color:#fff; }
-.ai-tooltip{
-  position:absolute; bottom:70px; right:0; background:rgba(30,41,59,.95);
-  border:1px solid rgba(167,139,250,.3); border-radius:8px; padding:8px 12px;
-  font-size:.75rem; color:#e2e8f0; white-space:nowrap; opacity:0; transform:translateY(10px);
-  transition: all .3s ease; backdrop-filter: blur(10px);
-}
-.ai-assistant:hover .ai-tooltip{ opacity:1; transform:translateY(0); }
-
-/* Efecto de fondo cuadriculado */
-.neural-grid{
-  position:absolute; inset:0;
-  background-image:
-    linear-gradient(rgba(167,139,250,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167,139,250,.03) 1px, transparent 1px);
-  background-size: 20px 20px;
-  pointer-events:none; z-index:0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(167, 139, 250, .6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  animation: ai-pulse 2s ease-in-out infinite;
 }
 
-/* Utilidad opcional para “escribiendo” */
-@keyframes typing-indicator{0%,50%{opacity:1}51%,100%{opacity:0}}
-.typing-indicator{ animation: typing-indicator 1s infinite; }
+@keyframes ai-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 30px rgba(167, 139, 250, .6);
+    transform: scale(1)
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(192, 132, 252, .8);
+    transform: scale(1.05)
+  }
+}
+
+.ai-assistant:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 50px rgba(167, 139, 250, .8);
+}
+
+.ai-assistant svg {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}
+
+.ai-tooltip {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: rgba(30, 41, 59, .95);
+  border: 1px solid rgba(167, 139, 250, .3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #e2e8f0;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.ai-assistant:hover .ai-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================
+   Utilidades usadas por JS
+========================= */
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.text-gray-400 {
+  color: var(--gray-400);
+}
+
+.text-green-400 {
+  color: var(--green-400);
+}
+
+.text-red-400 {
+  color: #f87171;
+}
+
+.text-yellow-400 {
+  color: var(--yellow-400);
+}
+
+.opacity-70 {
+  opacity: 0.7 !important;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
+/* Ghost pinta el span con esta clase literal "text-purple-400/80" */
+.text-purple-400\/80 {
+  color: rgba(192, 132, 252, 0.8);
+}

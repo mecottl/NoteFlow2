@@ -39,7 +39,7 @@
   }
 
   function setStatus(msg, cls = 'text-gray-400') {
-    statusEl.className = `mb-6 text-sm ${cls}`;
+    statusEl.className = `status-message ${cls}`;
     statusEl.textContent = msg || '';
   }
 
@@ -54,15 +54,15 @@
   function card(note) {
     const a = document.createElement('a');
     a.href = `/note?id=${note.id}`;
-    a.className = 'block bg-gray-900 p-7 rounded-xl shadow-xl border-2 border-purple-900 card-glow';
+    a.className = 'note-card fade-in';
     a.innerHTML = `
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-2xl font-semibold text-purple-400 line-clamp-3">
+      <div class="card-header">
+        <h3 class="note-title">
           ${escapeHTML(note.title || `Nota #${note.id}`)}
         </h3>
-        <span class="text-purple-500 text-xs">${fmt(note.updated_at || note.created_at)}</span>
+        <span class="note-date">${fmt(note.updated_at || note.created_at)}</span>
       </div>
-      <p class="text-gray-300 text-base mb-1 line-clamp-3">
+      <p class="note-content">
         ${escapeHTML(note.text || '')}
       </p>
     `;
@@ -87,11 +87,32 @@
       const notes = await res.json();
       if (!Array.isArray(notes) || notes.length === 0) {
         setStatus('Sin notas. Crea la primera arriba.');
+        // Show empty state
+        grid.innerHTML = `
+          <div class="empty-state">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3>No tienes notas aún</h3>
+            <p>Comienza creando tu primera nota</p>
+            <a href="/note" class="create-first-btn">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Crear primera nota
+            </a>
+          </div>
+        `;
         return;
       }
 
       setStatus('');
-      notes.forEach((n) => grid.appendChild(card(n)));
+      notes.forEach((n, index) => {
+        const cardEl = card(n);
+        // Add staggered animation delay
+        cardEl.style.animationDelay = `${index * 0.1}s`;
+        grid.appendChild(cardEl);
+      });
     } catch (e) {
       console.error(e);
       setStatus('Error cargando notas.', 'text-red-400');

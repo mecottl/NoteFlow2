@@ -4,113 +4,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Register</title>
-  <link rel="stylesheet" href="/css/output.css">
-  <link rel="stylesheet" href="/css/theme.css">
-  <link rel="stylesheet" href="/css/note.css">
+  <title>Register | NoteFlow</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/register.css">
   <link rel="icon" href="/images/icon.svg" type="image/svg+xml">
-
-
-  <style>
-    .input-glow {
-      box-shadow: 0 0 0 rgba(167, 139, 250, 0);
-      transition: .3s;
-    }
-
-    .input-glow:focus {
-      box-shadow: 0 0 8px rgba(167, 139, 250, .6);
-      border-color: #a78bfa;
-    }
-
-    .btn-glow {
-      box-shadow: 0 0 5px #a78bfa, 0 0 15px #a78bfa;
-      transition: .3s;
-    }
-
-    .btn-glow:hover {
-      box-shadow: 0 0 10px #c084fc, 0 0 25px #c084fc, 0 0 40px #c084fc;
-      transform: scale(1.05);
-    }
-
-    .bg-circuit {
-      background-image: url('/placeholder.svg?height=500&width=500');
-      background-size: cover;
-      background-position: center;
-      opacity: .1;
-    }
-  </style>
 </head>
 
-<body class="bg-gray-950 text-gray-100 font-sans min-h-screen bg-grid">
-  <header class="p-6 border-b-2 border-purple-800 shadow-lg shadow-purple-900/30">
-    <nav class="container mx-auto flex justify-between items-center">
-      <a href="/"
-        class="text-3xl font-extrabold text-purple-400 hover:text-purple-300 transition-colors tracking-wider glow-text">Note
-        Flow</a>
-      <div class="space-x-8 text-lg">
-        <a href="/login"
-          class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">Login</a>
+<body class="body-landing">
 
+  <div class="floating-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <header class="site-header">
+    <nav class="container flex items-center justify-between">
+      <a href="/" class="brand glow-text glitch">NoteFlow</a>
+      <div class="nav-links">
+        <a href="/" class="nav-link">← Inicio</a>
+        <a href="/login" class="nav-link">Login</a>
       </div>
     </nav>
   </header>
 
-  <main class="relative p-6 grid place-items-center">
-    <div class="absolute inset-0 bg-circuit"></div>
+  <main class="hero-container">
+    <div class="background-overlay"></div>
 
-    <div
-      class="bg-gray-900 p-10 rounded-xl shadow-2xl border-2 border-purple-800 w-full max-w-md relative z-10 transform transition-all duration-500 hover:scale-[1.01] hover:shadow-purple-900/70 mt-5">
-      <h2 class="text-5xl font-bold text-center mb-10 text-purple-400 tracking-wide">Register</h2>
+    <div class="register-container">
+      <h2 class="register-title">Register</h2>
 
-      <form id="registerForm" class="space-y-6">
-        <div>
-          <label for="email" class="block text-gray-400 text-lg font-bold mb-3">Email</label>
-          <input type="email" id="email" name="email" required
-            class="input-glow shadow-inner appearance-none border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            placeholder="user@noteflow.ai">
+      <form id="registerForm" class="register-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required class="form-input" placeholder="user@noteflow.ai">
         </div>
-        <div>
-          <label for="username" class="block text-gray-400 text-lg font-bold mb-3">Username</label>
-          <input type="text" id="username" name="username" required
-            class="input-glow shadow-inner appearance-none border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            placeholder="noteflow_" pattern="^(?=.{3,20}$)[a-z0-9]+(?:[_-][a-z0-9]+)*$">
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required class="form-input" placeholder="noteflow_"
+            pattern="^(?=.{3,20}$)[a-z0-9]+(?:[_-][a-z0-9]+)*$">
         </div>
-        <div>
-          <label for="password" class="block text-gray-400 text-lg font-bold mb-3">Password</label>
-          <input type="password" id="password" name="password" required
-            class="input-glow shadow-inner appearance-none border border-gray-700 rounded-lg w-full py-4 px-5 bg-gray-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            placeholder="••••••••••••">
-        
-              <div class="strength-meter">
-                <div class="strength-bar">
-                  <div id="strength-fill" class="strength-fill" style="width: 0%"></div>
-                </div>
-                <p class="text-xs text-gray-500 mt-1">Fortaleza de la clave: <span id="strength-text">Débil</span></p>
-              </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required class="form-input" placeholder="••••••••••••">
+
+          <div class="strength-meter">
+            <div class="strength-bar">
+              <div id="strength-fill" class="strength-fill"></div>
             </div>
+            <p class="strength-text">Fortaleza de la clave: <span id="strength-text">Débil</span></p>
+          </div>
+        </div>
 
-        <button id="submitBtn" type="submit"
-          class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-full w-full text-xl btn-glow">
+        <button id="submitBtn" type="submit" class="register-btn">
           Register
         </button>
 
-        <p id="message" class="text-center text-sm"></p>
+        <p id="message" class="message"></p>
 
-        <p class="text-center text-gray-400 text-md">
+        <p class="login-link">
           Already connected?
-          <a href="/login"
-            class="text-purple-400 hover:text-purple-300 font-bold transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">
-            Login
-          </a>.
+          <a href="/login">Login</a>.
         </p>
       </form>
     </div>
   </main>
-
+  <footer class="site-footer">
+    <div class="container">
+      <p>2025 Gerardo Mecott. NoteFlow</p>
+      <p class="footer-subtitle">Conectando mentes • Potenciando ideas • Transformando el futuro</p>
+    </div>
+  </footer>
   <script src="/js/register.js" defer></script>
-  <script src="../utils/passStrength.js"></script>
+  <script src="/utils/passStrength.js"></script>
 
 </body>
 
 </html>
-

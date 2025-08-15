@@ -1,0 +1,415 @@
+/* ====== NOTAS (página) - depende de global.css ====== */
+
+/* Greeting del usuario en el header (propio de esta vista) */
+.user-greeting {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-style: italic;
+  margin-left: 0.75rem;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #d8b4fe;
+  cursor: default;
+}
+
+/* Contenedor principal */
+.main-container {
+  flex-grow: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+/* Encabezado de la página (título + botón) */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--purple-800);
+  padding-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: clamp(2.5rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--secondary-purple);
+  margin-bottom: 1rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  cursor: default;
+}
+
+/* Botón: Nueva nota */
+.new-note-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #7c3aed;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 9999px;
+  box-shadow: 0 0 5px #a78bfa, 0 0 15px #a78bfa;
+  transition: all 0.3s ease;
+}
+
+.new-note-btn:hover {
+  box-shadow: 0 0 10px #c084fc, 0 0 25px #c084fc, 0 0 40px #c084fc;
+  transform: scale(1.05);
+}
+
+.new-note-btn .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Mensajes de estado (el JS cambia las clases) */
+.status-message {
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-400);
+}
+
+.status-message.text-gray-400 {
+  color: var(--gray-400);
+}
+
+.status-message.text-red-400 {
+  color: #f87171;
+}
+
+.status-message.text-green-400 {
+  color: #4ade80;
+}
+
+/* Grid de notas */
+.notes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .notes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .notes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .notes-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Tarjetas (compat con clases que genera el JS) */
+.note-card,
+.block {
+  background-color: #111827;
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  border: 2px solid var(--purple-900);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 5px rgba(167, 139, 250, 0.4);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.note-card:hover,
+.block:hover {
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 15px rgba(192, 132, 252, 0.8);
+  transform: translateY(-5px);
+  border-color: var(--purple-800);
+}
+
+/* Variantes tailwind-like que el JS podría inyectar */
+.block.bg-gray-900 {
+  background-color: #111827;
+}
+
+.block.border-purple-900 {
+  border-color: var(--purple-900);
+}
+
+.block.card-glow {
+  box-shadow: 0 0 5px rgba(167, 139, 250, .4);
+}
+
+.block.card-glow:hover {
+  box-shadow: 0 0 15px rgba(192, 132, 252, .8);
+  transform: translateY(-5px);
+}
+
+/* Línea superior luminosa on hover */
+.note-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #a78bfa, #c084fc, #db2777);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.note-card:hover::before {
+  opacity: 1;
+}
+
+/* ======== FIX: título arriba y fecha abajo ======== */
+/* Si el header se crea con 'flex items-center justify-between' o con 'card-header' */
+.note-card .flex.items-center.justify-between,
+.block .flex.items-center.justify-between,
+.card-header {
+  display: flex;
+  flex-direction: column;
+  /* apila */
+  align-items: flex-start;
+  /* alinea a la izquierda */
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  /* separa del contenido */
+}
+
+/* Título de la nota */
+.note-title {
+  order: 1;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--secondary-purple);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* 2 líneas máximas para evitar desbordes */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Fecha de edición (debajo del título) */
+.note-date {
+  order: 2;
+  margin: 0;
+  align-self: flex-start;
+  color: var(--primary-purple);
+  font-size: 0.75rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  white-space: nowrap;
+  /* evita salto raro en la fecha */
+  opacity: 0.95;
+}
+
+/* Contenido/preview de la nota */
+.note-content {
+  color: #d1d5db;
+  font-size: 1rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  /* 3 líneas de preview */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* Meta al pie de la card (si lo usas) */
+.note-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  border-top: 1px solid #374151;
+  padding-top: 0.75rem;
+}
+
+/* Acciones de la nota (botones pequeños) */
+.note-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.note-action-btn {
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 1px solid var(--purple-800);
+  color: var(--secondary-purple);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.note-action-btn:hover {
+  background-color: var(--purple-800);
+  color: #fff;
+}
+
+.note-action-btn.delete:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Utilidades que el JS podría usar (compat con tailwind names) */
+.text-purple-400 {
+  color: var(--secondary-purple);
+}
+
+.text-purple-500 {
+  color: var(--primary-purple);
+}
+
+.text-gray-300 {
+  color: var(--gray-300);
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+}
+
+.empty-state .icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  opacity: .5;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: .5rem;
+  color: var(--gray-400);
+}
+
+.empty-state p {
+  font-size: .875rem;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state .create-first-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .75rem 1.5rem;
+  background-color: #7c3aed;
+  color: #fff;
+  text-decoration: none;
+  border-radius: .5rem;
+  transition: background-color .2s ease;
+}
+
+.empty-state .create-first-btn:hover {
+  background-color: #6d28d9;
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #374151;
+  border-top: 2px solid var(--secondary-purple);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Accesibilidad: focus visible */
+.new-note-btn:focus-visible,
+.note-action-btn:focus-visible,
+.nav-links a:focus-visible,
+.brand:focus-visible {
+  outline: 2px solid var(--secondary-purple);
+  outline-offset: 2px;
+}
+
+/* Responsivo */
+@media (min-width: 768px) {
+  .header-section {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .page-title {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .user-greeting {
+    margin-left: 0;
+    font-size: 1.5rem;
+  }
+
+  .main-container {
+    padding: 1rem;
+  }
+
+  .notes-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .note-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .new-note-btn {
+    padding: .625rem 1.25rem;
+    font-size: .875rem;
+  }
+}

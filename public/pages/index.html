@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>NoteFlow</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="icon" href="/images/icon.svg" type="image/svg+xml">
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col bg-grid">
-  
-  <!-- Floating Particles -->
+
+<body class="body-landing">
+
   <div class="floating-particles">
     <div class="particle"></div>
     <div class="particle"></div>
@@ -22,72 +23,65 @@
     <div class="particle"></div>
   </div>
 
-  <header class="p-6 border-b-2 border-purple-800 shadow-lg shadow-purple-900/30 relative z-10">
-    <nav class="container mx-auto flex justify-between items-center">
-      <a href="/" class="text-3xl font-extrabold text-purple-400 hover:text-purple-300 transition-colors tracking-wider glow-text glitch">
-        NoteFlow
-      </a>
-      <div class="space-x-8 text-2xl">
-        <a href="/login" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">
-          Login
-        </a>
-        <a href="/register" class="text-gray-300 hover:text-purple-400 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-purple-500 after:transition-all after:duration-300 hover:after:w-full">
-          Register
-        </a>
+  <header class="site-header">
+    <nav class="container flex items-center justify-between">
+      <a href="/" class="brand glow-text">NoteFlow</a>
+      <div class="nav-links">
+        <a href="/login" class="nav-link">Login</a>
+        <a href="/register" class="nav-link">Register</a>
       </div>
     </nav>
   </header>
 
-  <main class="flex-grow flex items-center justify-center p-6 relative overflow-hidden hero-container">
-    <section class="text-center max-w-5xl relative z-10 bg-gray-950/70 p-12 rounded-2xl border-2 border-purple-900 shadow-2xl shadow-purple-900/50 backdrop-blur-sm">
-      <h1 class="text-8xl font-bold mb-8 leading-tight text-transparent bg-clip-text hero-title">
-        Extiende tus pensamientos con IA
-      </h1>
-      <p class="text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-        Experimenta la siguiente generación de toma de notas. NoteFlow utiliza inteligencia artificial avanzada para transformar tus ideas en insights accionables y potenciar tu creatividad.
+  <main class="main-landing hero-container">
+    <section class="hero-card">
+      <h1 class="hero-title">Extiende tus pensamientos con IA</h1>
+      <p class="hero-subtitle">
+        Experimenta la siguiente generación de toma de notas. NoteFlow utiliza inteligencia artificial avanzada para
+        transformar tus ideas en insights accionables y potenciar tu creatividad.
       </p>
-      
-      <!-- Feature Cards -->
-      <div class="grid md:grid-cols-3 gap-6 mb-12">
-        <div class="feature-card p-6 rounded-xl floating">
-          <div class="text-purple-400 mb-4">
-            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-purple-300 mb-2">IA Inteligente</h3>
-          <p class="text-gray-400 text-sm">Sugerencias automáticas y análisis de contenido en tiempo real</p>
-        </div>
-        
-        <div class="feature-card p-6 rounded-xl floating" style="animation-delay: 0.5s;">
-          <div class="text-purple-400 mb-4">
-            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-purple-300 mb-2">Seguridad Total</h3>
-          <p class="text-gray-400 text-sm">Encriptación de extremo a extremo para proteger tus ideas</p>
-        </div>
-        
-        <div class="feature-card p-6 rounded-xl floating" style="animation-delay: 1s;">
-          <div class="text-purple-400 mb-4">
-            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-purple-300 mb-2">Velocidad Extrema</h3>
-          <p class="text-gray-400 text-sm">Sincronización instantánea en todos tus dispositivos</p>
-        </div>
-      </div>
+
+     <div class="features-grid">
+  <div class="feature-card floating">
+    <div class="feature-icon">
+      <svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <use href="/images/icons/features.svg#icon-bulb" xlink:href="/images/icons/features.svg#icon-bulb"></use>
+      </svg>
+    </div>
+    <h3 class="feature-title">IA Inteligente</h3>
+    <p class="feature-text">Sugerencias automáticas y análisis de contenido en tiempo real</p>
+  </div>
+
+  <div class="feature-card floating" style="animation-delay:.5s;">
+    <div class="feature-icon">
+      <svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <use href="/images/icons/features.svg#icon-lock" xlink:href="/images/icons/features.svg#icon-lock"></use>
+      </svg>
+    </div>
+    <h3 class="feature-title">Seguridad Total</h3>
+    <p class="feature-text">Encriptación de extremo a extremo para proteger tus ideas</p>
+  </div>
+
+  <div class="feature-card floating" style="animation-delay:1s;">
+    <div class="feature-icon">
+      <svg class="feature-svg" viewBox="0 0 24 24" aria-hidden="true">
+        <use href="/images/icons/features.svg#icon-zap" xlink:href="/images/icons/features.svg#icon-zap"></use>
+      </svg>
+    </div>
+    <h3 class="feature-title">Velocidad Extrema</h3>
+    <p class="feature-text">Sincronización instantánea en todos tus dispositivos</p>
+  </div>
+</div>
 
     </section>
   </main>
 
-  <footer class="p-6 text-center text-gray-500 text-sm border-t-2 border-purple-800 shadow-inner shadow-purple-900/30 relative z-10">
-    <div class="container mx-auto">
-      <p>&copy; 2025 Gerardo Mecott. NoteFlow</p>
-      <p class="mt-2 text-xs text-purple-400">Conectando mentes • Potenciando ideas • Transformando el futuro</p>
+  <footer class="site-footer">
+    <div class="container">
+      <p>2025 Gerardo Mecott. NoteFlow</p>
+      <p class="footer-subtitle">Conectando mentes • Potenciando ideas • Transformando el futuro</p>
     </div>
   </footer>
 </body>
+
 </html>

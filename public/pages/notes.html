@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>My Flow</title>
-<link rel="stylesheet" href="/css/output.css">
-<link rel="stylesheet" href="/css/theme.css">
-<link rel="icon" href="/images/icon.svg" type="image/svg+xml">
-
-
-  <style>
-    .btn-glow { box-shadow: 0 0 5px #a78bfa, 0 0 15px #a78bfa; transition: .3s; }
-    .btn-glow:hover { box-shadow: 0 0 10px #c084fc, 0 0 25px #c084fc, 0 0 40px #c084fc; transform: scale(1.05); }
-    .card-glow { box-shadow: 0 0 5px rgba(167,139,250,.4); transition: .3s; }
-    .card-glow:hover { box-shadow: 0 0 15px rgba(192,132,252,.8); transform: translateY(-5px); }
-    .line-clamp-3 { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>My Flow | NoteFlow</title>
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/notes.css">
+  <link rel="icon" href="/images/icon.svg" type="image/svg+xml">
 </head>
-<body class="bg-gray-950 text-gray-100 font-mono min-h-screen flex flex-col">
 
-  <header class="p-6 border-b-2 border-purple-800 shadow-lg shadow-purple-900/30">
-    <nav class="container mx-auto flex justify-between items-center">
-      <a href="/notes" class="text-3xl font-extrabold text-purple-400 hover:text-purple-300 transition-colors tracking-wider">
+<body class="body-landing">
+  <div class="floating-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+  <header class="site-header">
+    <nav class="container flex items-center justify-between">
+      <a href="/notes" class="brand glow-text">
         NoteFlow
       </a>
-      <span id="helloUser" class="ml-3 text-3xl font-extrabold text-purple-300"></span>
-      <div class="space-x-8 text-lg">
-        <a id="logoutLink" href="/login" class="text-gray-300 hover:text-purple-400 transition-colors">Cerrar sesión</a>
+      <span id="helloUser" class="user-greeting"></span>
+      <div class="nav-links">
+        <a id="logoutLink" href="/" class="nav-link">Cerrar sesión</a>
       </div>
     </nav>
   </header>
 
-  <main class="flex-grow container mx-auto p-8">
-    <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-purple-700 pb-6">
-      <h1 class="text-4xl md:text-5xl font-bold text-purple-400 mb-4 md:mb-0">My flow</h1>
+  <main class="main-container">
+    <div class="header-section">
+      <h1 class="page-title">My flow</h1>
 
-      <a href="/note" class="px-6 py-3 bg-purple-700 text-white rounded-full shadow-lg btn-glow flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M12 5v14"/><path d="M5 12h14"/>
+      <a href="/note" class="new-note-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M12 5v14" />
+          <path d="M5 12h14" />
         </svg>
         Nueva nota
       </a>
     </div>
 
-    <div id="status" class="mb-6 text-sm text-gray-400"></div>
-    <div id="notesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+    <div id="status" class="status-message"></div>
+    <div id="notesGrid" class="notes-grid"></div>
   </main>
 
-  <footer class="p-6 text-center text-gray-500 text-sm border-t-2 border-purple-800 shadow-inner shadow-purple-900/30">
-    
+<footer class="site-footer">
+    <div class="container">
+      <p>2025 Gerardo Mecott. NoteFlow</p>
+      <p class="footer-subtitle">Conectando mentes • Potenciando ideas • Transformando el futuro</p>
+    </div>
   </footer>
 
-<script src="/js/notes.js" defer></script>
+  <script src="/js/notes.js" defer></script>
 </body>
+
 </html>
