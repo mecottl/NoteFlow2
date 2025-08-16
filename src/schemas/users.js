@@ -1,3 +1,4 @@
+// schemas/users.js
 import { z } from 'zod'
 
 // --- reglas comunes ---
@@ -9,23 +10,35 @@ const passwordSchema = z
   .regex(/[0-9]/, { message: 'La contraseña debe contener al menos un número' })
   .regex(/[^A-Za-z0-9]/, { message: 'La contraseña debe contener al menos un carácter especial' })
 
-// Username: 3–20, letras/números, guion o guion_bajo solo entre caracteres (sin espacios)
 const USERNAME_STRICT_RE = /^(?=.{3,20}$)[a-z0-9]+(?:[_-][a-z0-9]+)*$/
 
-// --- esquemas ---
+// Identificador de login: email O username en el MISMO campo "email"
+const identifierSchema = z.string()
+  .trim()
+  .transform(s => s.toLowerCase())
+  .refine(v => (v.includes('@')
+    ? z.string().email().safeParse(v).success
+    : USERNAME_STRICT_RE.test(v)
+  ), {
+    message: 'Debe ser email válido o username (3–20, letras/números, - y _ solo entre caracteres)'
+  })
+
 export const loginSchema = z.object({
-  email: z.string().email({ message: 'Email inválido' }),
-  password: passwordSchema
+  email: identifierSchema,            // email O username
+  password: passwordSchema,
+  remember: z.coerce.boolean().optional()
 })
 
-export const registerSchema = loginSchema.extend({
-  username: z
-    .string()
+// Para registro: aquí SÍ exige email real, no el union.
+export const registerSchema = z.object({
+  email: z.string().trim().toLowerCase().email({ message: 'Email inválido' }),
+  username: z.string()
     .trim()
+    .toLowerCase()
     .regex(USERNAME_STRICT_RE, {
       message: 'Username inválido: 3–20, letras/números, - y _ solo entre caracteres'
-    })
-    .transform((s) => s.toLowerCase()) // normaliza a minúsculas
+    }),
+  password: passwordSchema
 })
 
 // --- helpers ---
@@ -48,7 +61,7 @@ export function validateRegister(data) {
   return zodToResp(registerSchema.safeParse(data))
 }
 
-// Compat: si tu código usa validateAuth para /login, se mantiene igual
+// Compat
 export function validateAuth(data) {
   return validateLogin(data)
 }

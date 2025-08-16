@@ -38,13 +38,19 @@
 
       <form id="loginForm" class="login-form">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required class="form-input" placeholder="email o username">
+          <label for="email">Email o username</label>
+          <input type="text" id="email" name="email" required class="form-input" placeholder="user@noteflow.ia">
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" required class="form-input" placeholder="••••••••••••">
+        </div>
+        <div class="form-group remember-row">
+          <label class="remember">
+            <input type="checkbox" id="remember" name="remember">
+            Mantener sesión iniciada
+          </label>
         </div>
 
         <button id="submitBtn" type="submit" class="login-btn">
@@ -60,7 +66,7 @@
       </form>
     </div>
   </main>
-    <footer class="site-footer">
+  <footer class="site-footer">
     <div class="container">
       <p>2025 Gerardo Mecott. NoteFlow</p>
       <p class="footer-subtitle">Conectando mentes • Potenciando ideas • Transformando el futuro</p>
@@ -68,4 +74,5 @@
   </footer>
   <script src="/js/login.js" defer></script>
 </body>
+
 </html>

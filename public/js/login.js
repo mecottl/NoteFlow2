@@ -4,11 +4,9 @@
   const submitBtn = document.getElementById('submitBtn');
   const API = '/api';
 
-  // Helper para setear mensaje y clases correctamente
   function setMessage(type, text) {
-    // Mantén siempre la clase base 'message'
     messageEl.className = 'message';
-    if (type) messageEl.classList.add(type); // 'success' | 'error' | 'info'
+    if (type) messageEl.classList.add(type);
     messageEl.textContent = text || '';
   }
 
@@ -21,7 +19,8 @@
 
     const credentials = {
       email: form.email.value.trim(),
-      password: form.password.value
+      password: form.password.value,
+      remember: !!form.remember.checked
     };
 
     try {
@@ -39,7 +38,14 @@
         setMessage('error', msg);
       } else {
         setMessage('success', '¡Login exitoso!');
-        localStorage.setItem('token', data.token);
+        // Persistencia según "recordar sesión"
+        if (credentials.remember) {
+          sessionStorage.removeItem('token');
+          localStorage.setItem('token', data.token);
+        } else {
+          localStorage.removeItem('token');
+          sessionStorage.setItem('token', data.token);
+        }
         setTimeout(() => { window.location.href = '/notes'; }, 500);
       }
     } catch {

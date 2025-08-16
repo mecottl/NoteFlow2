@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 - Conexión Perdida | NoteFlow</title>
+  <link rel="stylesheet" href="/css/global.css"/>
   <link rel="stylesheet" href="/css/404.css">
   <link rel="icon" href="/images/icon.svg" type="image/svg+xml">
 </head>
 <body>
-  
-  <!-- Partículas flotantes -->
   <div class="floating-particles">
     <div class="particle"></div>
     <div class="particle"></div>
@@ -21,25 +20,17 @@
     <div class="particle"></div>
   </div>
 
-  <!-- Circuito neural de fondo -->
-  <div class="neural-circuit"></div>
-
-  <!-- Línea de escaneo -->
-  <div class="scan-line"></div>
-
-  <header>
-    <nav class="container">
-      <a href="/" class="logo">Note Flow</a>
+  <header class="site-header">
+    <nav class="container flex items-center justify-between">
+      <a href="/" class="brand glow-text">NoteFlow</a>
       <div class="nav-links">
-        <a href="/">Inicio</a>
-        <a href="/login">Login</a>
+        <a href="/login" class="nav-link">Login</a>
+        <a href="/register" class="nav-link">Register</a>
       </div>
     </nav>
   </header>
 
-  <main>
-    <div class="background-overlay"></div>
-    
+  <main>    
     <section class="error-section">
       
       <!-- Número 404 gigante -->
@@ -86,8 +77,11 @@
     </section>
   </main>
 
-  <footer>
-    2025 Gerardo Mecott. NoteFlow - Neural Network Error Handler
+  <footer class="site-footer">
+    <div class="container">
+      <p>2025 Gerardo Mecott. NoteFlow</p>
+      <p class="footer-subtitle">Conectando mentes • Potenciando ideas • Transformando el futuro</p>
+    </div>
   </footer>
 
   <script>

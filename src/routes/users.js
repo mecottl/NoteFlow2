@@ -10,8 +10,8 @@ const JWT_SECRET = process.env.JWT_SECRET
 
 // reserva nombres obvios
 const RESERVED = new Set([
-  'admin','root','support','about','help','login','register',
-  'notes','note','api','v1','system'
+  'admin', 'root', 'support', 'about', 'help', 'login', 'register',
+  'notes', 'note', 'api', 'v1', 'system'
 ])
 
 // POST /register
@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
   const { data: userRow, error: userErr } = await supabaseAdmin
     .from('users')
     .select('id')
-    .ilike('username', username)
+    .eq('username', username)
     .maybeSingle()
 
   if (userErr && userErr.code !== 'PGRST116') {
@@ -75,13 +75,14 @@ router.post('/register', async (req, res) => {
   res.status(201).json({ message: 'Usuario registrado', token })
 })
 
-// POST /login  (acepta email o username en el campo "email" del form)
+// POST /login
 router.post('/login', async (req, res) => {
   const validation = validateLogin(req.body)
   if (!validation.success) return res.status(400).json({ errors: validation.errors })
 
   const identifier = validation.data.email.trim().toLowerCase()
   const password = validation.data.password
+  const remember = !!validation.data.remember;
 
   // Si contiene @ asumimos email, si no username
   let q = supabaseAdmin
@@ -90,18 +91,19 @@ router.post('/login', async (req, res) => {
     .limit(1)
 
   if (identifier.includes('@')) q = q.eq('email', identifier)
-  else q = q.ilike('username', identifier)
+  else q = q.eq('username', identifier)
 
   const { data: user, error: fetchErr } = await q.single()
   if (fetchErr || !user) return res.status(401).json({ error: 'Credenciales inválidas' })
 
   const ok = await bcrypt.compare(password, user.password_hash)
   if (!ok) return res.status(401).json({ error: 'Credenciales inválidas' })
+  const expiresIn = remember ? '30d' : '1h'; // ← NUEVO
 
   const token = jwt.sign(
     { sub: user.id, email: user.email, username: user.username },
     JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn }
   )
 
   res.json({ message: 'Acceso exitoso', token })
@@ -130,8 +132,8 @@ router.get('/username-availability', async (req, res) => {
 
     // usa la misma lista que en /register
     const RESERVED = new Set([
-      'admin','root','support','about','help','login','register',
-      'notes','note','api','v1','system'
+      'admin', 'root', 'support', 'about', 'help', 'login', 'register',
+      'notes', 'note', 'api', 'v1', 'system'
     ]);
     if (RESERVED.has(u)) {
       return res.json({ available: false, reason: 'reserved' });
@@ -141,7 +143,7 @@ router.get('/username-availability', async (req, res) => {
     const { data, error } = await supabaseAdmin
       .from('users')
       .select('id')
-      .ilike('username', u)
+      .eq('username', u)
       .maybeSingle();
 
     if (error) {

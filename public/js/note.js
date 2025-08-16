@@ -2,7 +2,7 @@
 
   // Ruteo principal
   const API = '/api';
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if (!token) return (window.location.href = '/login');
 
   // DOM

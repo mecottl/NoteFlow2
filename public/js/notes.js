@@ -6,7 +6,7 @@
   const logoutLink = document.getElementById('logoutLink');
   const helloEl = document.getElementById('helloUser');
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if (!token) return (window.location.href = '/login');
 
   // Decodifica JWT (base64url-safe)
