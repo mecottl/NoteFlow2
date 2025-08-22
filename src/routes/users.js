@@ -37,7 +37,6 @@ router.post('/register', async (req, res) => {
   }
   if (emailRow) return res.status(409).json({ error: 'Email ya registrado' })
 
-  // ¿username ya existe? (case-insensitive)
   const { data: userRow, error: userErr } = await supabaseAdmin
     .from('users')
     .select('id')
@@ -57,7 +56,6 @@ router.post('/register', async (req, res) => {
     .select('id, email, username')
     .single()
 
-  // Por si hay carrera y salta la unique constraint
   if (insertErr) {
     if (insertErr.code === '23505') {
       return res.status(409).json({ error: 'Username no disponible' })
@@ -84,7 +82,7 @@ router.post('/login', async (req, res) => {
   const password = validation.data.password
   const remember = !!validation.data.remember;
 
-  // Si contiene @ asumimos email, si no username
+  // Si contiene @ es email, si no username
   let q = supabaseAdmin
     .from('users')
     .select('id, email, username, password_hash')
@@ -147,7 +145,6 @@ router.get('/username-availability', async (req, res) => {
       .maybeSingle();
 
     if (error) {
-      // si algo peta en DB, no tires el front: di server error
       return res.status(500).json({ available: false, reason: 'server' });
     }
 

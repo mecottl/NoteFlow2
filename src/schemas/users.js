@@ -1,7 +1,7 @@
 // schemas/users.js
 import { z } from 'zod'
 
-// --- reglas comunes ---
+// Reglas comunes
 const passwordSchema = z
   .string()
   .min(8, { message: 'La contraseña debe tener al menos 8 caracteres' })

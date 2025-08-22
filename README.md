@@ -1,12 +1,7 @@
-Aquí tienes tu README listo como archivo `.md`:
-
-[📄 Descargar README.md](sandbox:/README.md)
-
-````markdown
-# Noteflow
+# NoteFlow
 
 Sistema de notas por usuario con **Node.js + Express**, **Supabase** y **JWT**.  
-Frontend en HTML + Tailwind, servido por Express, con JS vanilla para consumir la API.
+Frontend en HTML + CSS personalizado, servido por Express, con JS vanilla para consumir la API.
 
 ---
 
@@ -30,10 +25,9 @@ Frontend en HTML + Tailwind, servido por Express, con JS vanilla para consumir l
 ```bash
 noteflow/
 ├─ package.json
-├─ pnpm-lock.yaml
 ├─ .env                      # variables de entorno (no subir a git)
 ├─ index.js                  # entrypoint del servidor (levanta app.js)
-├─ app.js                 # configuración de Express (rutas, estáticos, montaje de /api)
+├─ app.js                    # configuración de Express (rutas, estáticos, montaje de /api)
 └─ src/
    ├─ lib/
    │  └─ supabase.js         # cliente Supabase (Service Role) para CRUD seguro
@@ -54,79 +48,24 @@ noteflow/
       └─ js/
          ├─ login.js         # flujo de login; guarda token
          ├─ register.js      # registro + debounce de disponibilidad de username
-         └─ notes.js         # carga notas y “Hola, {username}” (decodifica JWT)
-````
-
-### ¿Para qué sirve cada archivo y con cuál se relaciona?
-
-* **index.js**
-  Arranca el servidor: `import app from './src/app.js'` y hace `app.listen(...)`.
-  ➜ Relación: **src/app.js**.
-
-* **app.js**
-  Configura Express (`cors`, `express.json`, deshabilita `x-powered-by`).
-  Sirve páginas estáticas: `/`, `/login`, `/register`, `/notes`, `/note`.
-  Monta API bajo `/api`: `app.use('/api', usersRouter)` y `app.use('/api', notesRouter)`.
-  (Opcional) sirve estáticos con `express.static` desde `src/public`.
-  ➜ Relación: **routes/users.js**, **routes/notes.js**, **public/pages**, **public/js**.
-
-* **src/lib/supabase.js**
-  Crea el cliente **supabaseAdmin** con `SUPABASE_SERVICE_ROLE_KEY`.
-  Se importa desde rutas para operar con DB sin chocar con RLS.
-  ➜ Relación: **routes/users.js**, **routes/notes.js**.
-
-* **src/middleware/auth.js**
-  Lee `Authorization: Bearer <JWT>`, valida con `JWT_SECRET`, añade `req.user = { id, email, username }`.
-  ➜ Relación: **routes/notes.js** (todas las rutas protegidas), opcional en **routes/users.js** si agregas endpoints privados.
-
-* **src/routes/users.js**
-
-  * `POST /api/register`: valida con Zod, chequea email/username, hashea password, inserta, devuelve **JWT** (autologin).
-  * `POST /api/login`: acepta **email o username** en el campo `email`, devuelve **JWT**.
-  * `GET /api/username-availability?u=...`: UX para registro (disponibilidad en tiempo real).
-    ➜ Relación: **schemas/users.js**, **lib/supabase.js**, **middleware/auth.js** (si añades endpoints privados).
-
-* **src/routes/notes.js**
-  CRUD de notas protegido con `authenticate`.
-
-  * `GET /api/notes`, `GET /api/notes/:id`
-  * `POST /api/notes`, `PUT /api/notes/:id`, `DELETE /api/notes/:id`
-    ➜ Relación: **middleware/auth.js**, **lib/supabase.js**.
-
-* **src/schemas/users.js**
-  `validateRegister` (email, password fuerte, username) y `validateLogin`.
-  Se usa en **routes/users.js** para validar inputs.
-  ➜ Relación: **routes/users.js**.
-
-* **src/public/pages/**
-  HTMLs servidos por Express en rutas “públicas”:
-
-  * `index.html` landing
-  * `login.html` formulario de login
-  * `register.html` formulario de registro con `<input name="username" ... pattern=...>`
-  * `notes.html` listado de notas + botón “Nueva nota”
-  * `note.html` editor de nota (crear/editar; envía `title` y `text`)
-    ➜ Relación: **public/js/** correspondientes y **routes** vía fetch.
-
-* **src/public/js/**
-
-  * `login.js`: envía credenciales, guarda token en `localStorage`.
-  * `register.js`: valida/normaliza `username`, **debounce** a `/api/username-availability`, registra y (si autologin) guarda token y redirige.
-  * `notes.js`: decodifica **JWT**, muestra saludo `Hola, {username}`, consulta `/api/notes` y pinta tarjetas.
-    ➜ Relación: **routes/users.js**, **routes/notes.js**.
+         ├─ notes.js         # carga notas y “Hola, {username}” (decodifica JWT)
+         └─ note.js          # editor neural con IA y borradores locales
+      └─ css/
+         ├─ global.css
+         ├─ notes.css
+         ├─ note.css
+         └─ 404.css
+      └─ images/
+         └─ icon.svg, bg.svg, icons/
+```
 
 ---
 
 ## Instalación & arranque
 
 ```bash
-# 1) Instala dependencias
 pnpm install
-
-# 2) Crea .env (ver sección Variables de entorno)
 cp .env.example .env   # si tienes un ejemplo
-
-# 3) Desarrollo
 pnpm run dev           # nodemon index.js
 # server running on http://localhost:1234
 ```
@@ -134,8 +73,6 @@ pnpm run dev           # nodemon index.js
 ---
 
 ## Variables de entorno
-
-`.env` (ejemplo):
 
 ```env
 PORT=1234
@@ -149,40 +86,64 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 
 ## Modelo de datos (Supabase)
 
-*(Sección con definiciones SQL para users y notes)*
+- Tabla `users`: id, email, username, password_hash, created_at
+- Tabla `notes`: id, user_id, title, text, created_at, updated_at
 
 ---
 
 ## Rutas de la API
 
-*(Listado completo con ejemplos de request/response)*
+- `POST /api/register`  
+- `POST /api/login`  
+- `GET /api/username-availability?u=...`  
+- `GET /api/notes`  
+- `GET /api/notes/:id`  
+- `POST /api/notes`  
+- `PUT /api/notes/:id`  
+- `DELETE /api/notes/:id`  
 
 ---
 
 ## Flujos principales
 
-*(Explicación paso a paso de Registro, Login y CRUD de notas)*
+- **Registro:** Valida datos, chequea disponibilidad, crea usuario y autologin.
+- **Login:** Email o username, devuelve JWT.
+- **CRUD de notas:** Listar, crear, editar, eliminar notas protegidas por JWT.
+- **Editor neural:** Sugerencias IA, borradores locales, sincronización visual.
 
 ---
 
-## Relaciones entre archivos (detallado)
+## Relaciones entre archivos
 
-*(Mapa de dependencias y conexiones entre módulos)*
+- `index.js` → `app.js` → routers de `src/routes/`
+- `app.js` sirve estáticos y páginas HTML desde `public/pages/`
+- JS de frontend (`public/js/`) consume API y manipula DOM
+- Rutas protegidas usan `middleware/auth.js`
+- Validaciones con Zod en `schemas/users.js`
+- Supabase client en `lib/supabase.js`
 
 ---
 
 ## Notas de seguridad y RLS
 
-*(Advertencias sobre uso de Service Role y JWT)*
+- JWT firmado con secreto fuerte.
+- Service Role Key solo en backend.
+- RLS en Supabase para proteger datos por usuario.
 
 ---
 
 ## Problemas comunes
 
-*(Errores típicos y soluciones)*
+- Error de autenticación: revisar JWT y variables de entorno.
+- Problemas de CORS: revisar configuración en `app.js`.
+- Errores de conexión a Supabase: revisar claves y URL.
 
 ---
 
 ## Roadmap breve
 
-*(Lista de mejoras futuras)*
+- Mejorar UI/UX en mobile.
+- Añadir historial de versiones de notas.
+- Integrar IA más avanzada.
+- Tests automáticos para rutas y frontend.
+- Mejorar manejo de errores y feedback visual.
